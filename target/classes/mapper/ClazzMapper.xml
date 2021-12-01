@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cc.sms.dao.ClazzMapper">
+<!--    根据班级与年级名查询指定/全部班级信息-->
+    <select id="selectList" parameterType="clazz" resultType="com.cc.sms.bean.Clazz">
+        select
+            id, name, number, introducation, coordinator, email, telephone, grade_name
+        from tb_clazz
+        <where>
+            <if test="grade_name != null and grade_name != ''">
+                and grade_name = #{grade_name}
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat(concat('%', #{name}), '%')
+            </if>
+        </where>
+    </select>
+
+<!--    根据班级名获取指定班级信息-->
+    <select id="findByName" parameterType="String" resultType="com.cc.sms.bean.Clazz">
+        select
+            id, name, number, introducation, coordinator, email, telephone, grade_name
+        from tb_clazz
+        where name = #{name}
+    </select>
+
+<!--    添加班级信息-->
+    <insert id="insert" parameterType="clazz">
+        insert into tb_clazz(name, number, introducation, coordinator, email, telephone, grade_name)
+                values(#{name}, #{number}, #{introducation}, #{coordinator}, #{email}, #{telephone}, #{grade_name})
+    </insert>
+
+<!--    根据id修改指定的班级信息-->
+    <update id="update" parameterType="clazz">
+        update tb_clazz
+        set name = #{name},
+            number = #{number},
+            introducation = #{introducation},
+            coordinator = #{coordinator},
+            email = #{email},
+            telephone = #{telephone},
+            grade_name = #{grade_name}
+        where id = #{id}
+    </update>
+
+<!--    删除指定id的班级信息-->
+    <delete id="deleteById">
+        delete from tb_clazz
+        where id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+<!--    查询所有班级信息列表-->
+    <select id="selectAll" resultType="com.cc.sms.bean.Clazz">
+        select
+            id, name, number, introducation, coordinator, email, telephone, grade_name
+        from tb_clazz
+    </select>
+</mapper>

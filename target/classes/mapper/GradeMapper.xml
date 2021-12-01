@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cc.sms.dao.GradeMapper">
+<!--    根据管理员姓名查询指定的管理员信息-->
+    <select id="selectList" parameterType="grade" resultType="com.cc.sms.bean.Grade">
+        select
+            id, name, manager, email, telephone, introducation
+        from tb_grade
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat(concat('%', #{name}), '%')
+            </if>
+        </where>
+    </select>
+
+<!--    根据年级名称查询指定年级信息-->
+    <select id="findByName" parameterType="String" resultType="com.cc.sms.bean.Grade">
+        select
+            id, name, manager, email, telephone, introducation
+        from tb_grade
+        where name = #{name}
+    </select>
+
+<!--    添加年级信息-->
+    <insert id="insert" parameterType="grade">
+        insert into tb_grade(name, manager, email, telephone, introducation)
+                values(#{name}, #{manager}, #{email}, #{telephone}, #{introducation})
+    </insert>
+
+<!--    根据id修改指定年级信息-->
+    <update id="update" parameterType="grade">
+        update tb_grade
+        set name = #{name},
+            manager = #{manager},
+            email = #{email},
+            telephone = #{telephone},
+            introducation = #{introducation}
+        where id = #{id}
+    </update>
+
+<!--    根据id删除指定的年级信息-->
+    <delete id="deleteById">
+        delete from tb_grade
+        where id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+<!--    //查询所有年级列表信息-->
+    <select id="selectAll" resultType="com.cc.sms.bean.Grade">
+        select
+            id, name, manager, email, telephone, introducation
+        from tb_grade
+    </select>
+</mapper>
